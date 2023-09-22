@@ -1,0 +1,70 @@
+language,num_tokens,clustering_candidates,iso_code,tree_candidates,clusters_closest_cand
+Tok Pisin,162957,"['Cebuano', 'Afrikaans']",tpi,"['Papiamentu', 'Haitian Creole', 'Guianese French Creole', 'Jamaican Creole']",Afrikaans
+Kurmanji,19137,"['Cebuano', 'Afrikaans']",kmr,"['Persian', 'Tajik', 'Kurdish (Central)', 'Zazaki']",Afrikaans
+Urubú-Kaapor,782,"['Navajo', 'Igbo', 'Aymara (Central)']",urb,['Guaraní'],Navajo
+Yup'ik (Central),4424,"['Navajo', 'Igbo', 'Aymara (Central)']",esu,['Greenlandic (South)'],Igbo
+Kongo,124790,"['Navajo', 'Igbo', 'Aymara (Central)']",kng,"['Swahili', 'Luganda', 'Shona', 'Zulu', 'Sotho (Northern)', 'Kinyarwanda', 'Xhosa']",Aymara (Central)
+Bambara,167145,"['Navajo', 'Igbo', 'Aymara (Central)']",bam,['Bambara'],Navajo
+Even,2793,"['Tatar', 'Bashkir', 'Ossetic']",eve,['Solon'],Bashkir
+Ewe,84905,"['Thai', 'Latvian', 'Khmer']",ewe,"['Swahili', 'Yoruba', 'Kabiyé', 'Luganda', 'Shona', 'Wolof']",Latvian
+Zhuang (Northern),276338,"['Mari (Meadow)', 'Belorussian', 'Minangkabau', 'Sinhala']",zgb,"['Thai', 'Shan', 'Lao']",Bikol
+Cherokee,165007,"['Mari (Meadow)', 'Belorussian', 'Minangkabau', 'Sinhala']",chr,['Cherokee'],Minangkabau
+Swati,136138,"['Mari (Meadow)', 'Belorussian', 'Minangkabau', 'Sinhala']",ssw,"['Swahili', 'Luganda', 'Shona', 'Zulu', 'Sotho (Northern)', 'Kinyarwanda', 'Xhosa']",Belorussian
+Warlpiri,866,"['Mari (Meadow)', 'Belorussian', 'Minangkabau', 'Sinhala']",wbp,['Warlpiri'],Belorussian
+Atikamekw,332656,"['German (Timisoara)', 'Swedish (Västerbotten)', 'Armenian (Iranian)', 'Indonesian (Jakarta)', 'Waray-Waray', 'Asturian', 'Galician', 'Slovak', 'Malay']",atj,['Atikamekw'],Asturian
+Tsonga,254970,"['German (Timisoara)', 'Swedish (Västerbotten)', 'Armenian (Iranian)', 'Indonesian (Jakarta)', 'Waray-Waray', 'Asturian', 'Galician', 'Slovak', 'Malay']",tso,"['Swahili', 'Luganda', 'Shona', 'Zulu', 'Sotho (Northern)', 'Kinyarwanda', 'Xhosa']",Asturian
+Nanai,239747,"['German (Timisoara)', 'Swedish (Västerbotten)', 'Armenian (Iranian)', 'Indonesian (Jakarta)', 'Waray-Waray', 'Asturian', 'Galician', 'Slovak', 'Malay']",gld,['Solon'],Papiamentu
+Romani (Lovari),204186,"['German (Timisoara)', 'Swedish (Västerbotten)', 'Armenian (Iranian)', 'Indonesian (Jakarta)', 'Waray-Waray', 'Asturian', 'Galician', 'Slovak', 'Malay']",rmy,"['Hindi', 'Urdu', 'Bengali', 'Panjabi']",Asturian
+Sranan,203571,"['German (Timisoara)', 'Swedish (Västerbotten)', 'Armenian (Iranian)', 'Indonesian (Jakarta)', 'Waray-Waray', 'Asturian', 'Galician', 'Slovak', 'Malay']",srn,"['Papiamentu', 'Haitian Creole', 'Guianese French Creole', 'Jamaican Creole']",Papiamentu
+Madurese,203272,"['German (Timisoara)', 'Swedish (Västerbotten)', 'Armenian (Iranian)', 'Indonesian (Jakarta)', 'Waray-Waray', 'Asturian', 'Galician', 'Slovak', 'Malay']",mad,"['Indonesian (Jakarta)', 'Malay', 'Minangkabau', 'Sundanese']",Frisian (Western)
+Shor,176874,"['German (Timisoara)', 'Swedish (Västerbotten)', 'Armenian (Iranian)', 'Indonesian (Jakarta)', 'Waray-Waray', 'Asturian', 'Galician', 'Slovak', 'Malay']",cjs,"['Chuvash', 'Turkish', 'Azerbaijani', 'Kazakh']",Altai (Southern)
+Greenlandic (South),154897,"['German (Timisoara)', 'Swedish (Västerbotten)', 'Armenian (Iranian)', 'Indonesian (Jakarta)', 'Waray-Waray', 'Asturian', 'Galician', 'Slovak', 'Malay']",kal,['Greenlandic (South)'],Mingrelian
+Rundi,139714,"['German (Timisoara)', 'Swedish (Västerbotten)', 'Armenian (Iranian)', 'Indonesian (Jakarta)', 'Waray-Waray', 'Asturian', 'Galician', 'Slovak', 'Malay']",run,"['Swahili', 'Luganda', 'Shona', 'Zulu', 'Sotho (Northern)', 'Kinyarwanda', 'Xhosa']",Waray-Waray
+Bislama,131055,"['German (Timisoara)', 'Swedish (Västerbotten)', 'Armenian (Iranian)', 'Indonesian (Jakarta)', 'Waray-Waray', 'Asturian', 'Galician', 'Slovak', 'Malay']",bis,"['Papiamentu', 'Haitian Creole', 'Guianese French Creole', 'Jamaican Creole']",Frisian (North)
+Nauruan,130644,"['German (Timisoara)', 'Swedish (Västerbotten)', 'Armenian (Iranian)', 'Indonesian (Jakarta)', 'Waray-Waray', 'Asturian', 'Galician', 'Slovak', 'Malay']",nau,"['Maori', 'Hawaiian', 'Tongan', 'Samoan', 'Nadroga']",Shan
+Tsakhur,91393,"['German (Timisoara)', 'Swedish (Västerbotten)', 'Armenian (Iranian)', 'Indonesian (Jakarta)', 'Waray-Waray', 'Asturian', 'Galician', 'Slovak', 'Malay']",tkr,"['Lezgian', 'Rutul']",Ladino
+Tabassaran,62888,"['German (Timisoara)', 'Swedish (Västerbotten)', 'Armenian (Iranian)', 'Indonesian (Jakarta)', 'Waray-Waray', 'Asturian', 'Galician', 'Slovak', 'Malay']",tab,"['Lezgian', 'Rutul']",Jamaican Creole
+Cheyenne,60485,"['German (Timisoara)', 'Swedish (Västerbotten)', 'Armenian (Iranian)', 'Indonesian (Jakarta)', 'Waray-Waray', 'Asturian', 'Galician', 'Slovak', 'Malay']",chy,['Atikamekw'],Asturian
+Tat (Muslim),60449,"['German (Timisoara)', 'Swedish (Västerbotten)', 'Armenian (Iranian)', 'Indonesian (Jakarta)', 'Waray-Waray', 'Asturian', 'Galician', 'Slovak', 'Malay']",ttt,"['Persian', 'Tajik', 'Kurdish (Central)', 'Zazaki']",Jamaican Creole
+Tofa,32512,"['German (Timisoara)', 'Swedish (Västerbotten)', 'Armenian (Iranian)', 'Indonesian (Jakarta)', 'Waray-Waray', 'Asturian', 'Galician', 'Slovak', 'Malay']",kim,"['Chuvash', 'Turkish', 'Azerbaijani', 'Kazakh']",Jamaican Creole
+Quiché,22925,"['German (Timisoara)', 'Swedish (Västerbotten)', 'Armenian (Iranian)', 'Indonesian (Jakarta)', 'Waray-Waray', 'Asturian', 'Galician', 'Slovak', 'Malay']",quc,['Quiché'],Asturian
+Karelian,7368,"['German (Timisoara)', 'Swedish (Västerbotten)', 'Armenian (Iranian)', 'Indonesian (Jakarta)', 'Waray-Waray', 'Asturian', 'Galician', 'Slovak', 'Malay']",krl,"['Finnish', 'Estonian', 'Veps']",Frisian (North)
+Dogri,5702,"['German (Timisoara)', 'Swedish (Västerbotten)', 'Armenian (Iranian)', 'Indonesian (Jakarta)', 'Waray-Waray', 'Asturian', 'Galician', 'Slovak', 'Malay']",dgo,"['Hindi', 'Urdu', 'Bengali', 'Panjabi']",Dutch (Zeeuws)
+Tupi,5518,"['German (Timisoara)', 'Swedish (Västerbotten)', 'Armenian (Iranian)', 'Indonesian (Jakarta)', 'Waray-Waray', 'Asturian', 'Galician', 'Slovak', 'Malay']",,['Guaraní'],Papiamentu
+Liv,3740,"['German (Timisoara)', 'Swedish (Västerbotten)', 'Armenian (Iranian)', 'Indonesian (Jakarta)', 'Waray-Waray', 'Asturian', 'Galician', 'Slovak', 'Malay']",liv,"['Finnish', 'Estonian', 'Veps']",Frisian (North)
+Neo-Aramaic (Assyrian),2610,"['German (Timisoara)', 'Swedish (Västerbotten)', 'Armenian (Iranian)', 'Indonesian (Jakarta)', 'Waray-Waray', 'Asturian', 'Galician', 'Slovak', 'Malay']",aii,"['Hebrew (Modern)', 'Arabic (Egyptian)', 'Maltese', 'Amharic']",Asturian
+Marshallese,1720,"['German (Timisoara)', 'Swedish (Västerbotten)', 'Armenian (Iranian)', 'Indonesian (Jakarta)', 'Waray-Waray', 'Asturian', 'Galician', 'Slovak', 'Malay']",mah,"['Maori', 'Hawaiian', 'Tongan', 'Samoan', 'Nadroga']",Mari (Hill)
+Mundurukú,1623,"['German (Timisoara)', 'Swedish (Västerbotten)', 'Armenian (Iranian)', 'Indonesian (Jakarta)', 'Waray-Waray', 'Asturian', 'Galician', 'Slovak', 'Malay']",myu,['Guaraní'],Shan
+Nadroga,198233,"['Catalan', 'Romansch (Sursilvan)', 'Sardinian']",fij,"['Maori', 'Hawaiian', 'Tongan', 'Samoan', 'Nadroga']",Seediq
+Koryak,246207,"['Buriat', 'Azerbaijani', 'Urdu', 'Azari (Iranian)', 'Tibetan (Modern Literary)', 'Bengali']",kpy,['Chukchi'],Tulu
+Tigrinya,125616,"['Buriat', 'Azerbaijani', 'Urdu', 'Azari (Iranian)', 'Tibetan (Modern Literary)', 'Bengali']",tir,"['Hebrew (Modern)', 'Arabic (Egyptian)', 'Maltese', 'Amharic']",Tulu
+Udi,96065,"['Buriat', 'Azerbaijani', 'Urdu', 'Azari (Iranian)', 'Tibetan (Modern Literary)', 'Bengali']",udi,"['Lezgian', 'Rutul']",Tulu
+Bhojpuri,14225,"['Buriat', 'Azerbaijani', 'Urdu', 'Azari (Iranian)', 'Tibetan (Modern Literary)', 'Bengali']",bho,"['Hindi', 'Urdu', 'Bengali', 'Panjabi']",Tulu
+Yukaghir (Tundra),4156,"['Buriat', 'Azerbaijani', 'Urdu', 'Azari (Iranian)', 'Tibetan (Modern Literary)', 'Bengali']",ykg,['Yukaghir (Kolyma)'],Tulu
+Yi,632,"['Buriat', 'Azerbaijani', 'Urdu', 'Azari (Iranian)', 'Tibetan (Modern Literary)', 'Bengali']",iii,['Burmese'],Tulu
+Itelmen,549,"['Buriat', 'Azerbaijani', 'Urdu', 'Azari (Iranian)', 'Tibetan (Modern Literary)', 'Bengali']",itl,['Chukchi'],Armenian (Western)
+Seminole,285,"['Buriat', 'Azerbaijani', 'Urdu', 'Azari (Iranian)', 'Tibetan (Modern Literary)', 'Bengali']",mus,['Choctaw'],Tulu
+Yukaghir (Kolyma),26321,"['Persian', 'Turkish', 'Hindi']",yux,['Yukaghir (Kolyma)'],Kannada
+Khanty,411,"['Chuvash', 'Telugu', 'Malayalam']",kca,"['Mansi', 'Hungarian']",Mansi
+Samoan,310172,"['Welsh', 'Gaelic (Scots)', 'Arabic (Modern Standard)']",smo,"['Maori', 'Hawaiian', 'Tongan', 'Samoan', 'Nadroga']",Tongan
+Tahitian,108214,"['Welsh', 'Gaelic (Scots)', 'Arabic (Modern Standard)']",tah,"['Maori', 'Hawaiian', 'Tongan', 'Samoan', 'Nadroga']",Tongan
+Guajajara,1640,"['Welsh', 'Gaelic (Scots)', 'Arabic (Modern Standard)']",gub,['Guaraní'],Chatino (Yaitepec)
+Qafar,36,"['Lak', 'Dargwa']",aar,['Somali'],Turkmen
+Beja,3187,['Amharic'],bej,"['Hebrew (Modern)', 'Arabic (Egyptian)', 'Malgwa', 'Hausa', 'Maltese']",Amharic
+Cantonese,19346,"['Italian', 'Polish', 'Portuguese']",yue,"['Mandarin', 'Wu', 'Fuzhou']",Bulgarian
+Akan,327232,"['Ukrainian', 'Czech', 'Norwegian', 'Breton']",aka,"['Swahili', 'Yoruba', 'Kabiyé', 'Luganda', 'Shona', 'Wolof']",Lao
+Chichewa,283628,"['Ukrainian', 'Czech', 'Norwegian', 'Breton']",nya,"['Swahili', 'Luganda', 'Shona', 'Zulu', 'Sotho (Northern)', 'Kinyarwanda', 'Xhosa']",Malgwa
+Kikuyu,180519,"['Ukrainian', 'Czech', 'Norwegian', 'Breton']",kik,"['Swahili', 'Luganda', 'Shona', 'Zulu', 'Sotho (Northern)', 'Kinyarwanda', 'Xhosa']",Xhosa
+Kashmiri,133648,"['Ukrainian', 'Czech', 'Norwegian', 'Breton']",kas,"['Hindi', 'Urdu', 'Bengali', 'Panjabi']",Malgwa
+Coptic,100443,"['Ukrainian', 'Czech', 'Norwegian', 'Breton']",cop,"['Hebrew (Modern)', 'Arabic (Egyptian)', 'Malgwa', 'Hausa', 'Maltese']",Sundanese
+Ndonga,3328,"['Ukrainian', 'Czech', 'Norwegian', 'Breton']",ndo,"['Swahili', 'Luganda', 'Shona', 'Zulu', 'Sotho (Northern)', 'Kinyarwanda', 'Xhosa']",Xhosa
+Chamorro,62287,"['English', 'Russian', 'French', 'Spanish']",cha,"['Cebuano', 'Indonesian (Jakarta)', 'Waray-Waray', 'Malay', 'Minangkabau']",Tagalog
+Sango,36249,"['English', 'Russian', 'French', 'Spanish']",sag,"['Swahili', 'Yoruba', 'Kabiyé', 'Luganda', 'Shona', 'Wolof']",Hausa
+Guaraní,29279,"['English', 'Russian', 'French', 'Spanish']",gug,['Guaraní'],Hausa
+Apurinã,1968,"['English', 'Russian', 'French', 'Spanish']",apu,['Apurinã'],Yoruba
+Dagbani,280602,"['Slovene', 'Macedonian', 'Mordvin (Erzya)', 'Kabiyé']",dag,['Kabiyé'],Sotho (Northern)
+Sesotho,217197,"['Slovene', 'Macedonian', 'Mordvin (Erzya)', 'Kabiyé']",sot,"['Swahili', 'Luganda', 'Shona', 'Zulu', 'Sotho (Northern)', 'Kinyarwanda', 'Xhosa']",Kabiyé
+Venda,114938,"['Slovene', 'Macedonian', 'Mordvin (Erzya)', 'Kabiyé']",ven,"['Swahili', 'Luganda', 'Shona', 'Zulu', 'Sotho (Northern)', 'Kinyarwanda', 'Xhosa']",Kabiyé
+Komi-Zyrian,29094,"['Slovene', 'Macedonian', 'Mordvin (Erzya)', 'Kabiyé']",kpv,"['Yazva', 'Udmurt', 'Komi-Permyak']",Kabiyé
+Archi,1167,"['Chechen', 'Kabardian', 'Yakut']",aqc,"['Lezgian', 'Rutul']",Chechen
+Choctaw,1028,"['Chechen', 'Kabardian', 'Yakut']",cho,['Seminole'],Chechen

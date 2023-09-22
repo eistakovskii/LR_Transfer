@@ -1,0 +1,9 @@
+transformers==4.12
+numpy
+typing
+flax==0.3.6
+jax
+torch
+datasets
+tqdm
+fire
