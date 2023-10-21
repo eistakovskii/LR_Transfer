@@ -166,10 +166,11 @@ class FlaxDataCollatorForT5MLM:
 def generate_batch_splits(samples_idx: jnp.ndarray, batch_size: int) -> jnp.ndarray:
     num_samples = len(samples_idx)
     samples_to_remove = num_samples % batch_size
-
     if samples_to_remove != 0:
         samples_idx = samples_idx[:-samples_to_remove]
     sections_split = num_samples // batch_size
+    if sections_split == 0:
+        print("Warning: Try to decrease batch size")
     batch_idx = np.split(samples_idx, sections_split)
     return batch_idx
 
