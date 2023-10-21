@@ -5,6 +5,7 @@ from transformers import (
     get_linear_schedule_with_warmup
 )
 import torch
+from tqdm.auto import tqdm
 from datasets import load_dataset
 import os
 import json
@@ -17,8 +18,9 @@ from typing import Optional, Tuple
 from fire import Fire
 from math import floor
 import uuid
+import gc
 
-import mt5_utils
+from tl_utils import *
 
 
 class mt5PerplexityExperiments:
@@ -31,6 +33,8 @@ class mt5PerplexityExperiments:
         self.device = device
         self.model = MT5ForConditionalGeneration.from_pretrained(model_id).to(device)
         self.tokenizer = T5Tokenizer.from_pretrained(model_id)
+        
+        self.log_dict = {}
 
     def get_tokenized_dataset(self, datasets, column_name):
         max_seq_length = min(self.max_seq_length, self.tokenizer.model_max_length)
@@ -38,18 +42,18 @@ class mt5PerplexityExperiments:
         text_column_name = "text" if "text" in column_names else column_names[0]
         
         tokenized_datasets = datasets.map(
-            lambda x: mt5_utils.tokenize_function(x, tokenizer=self.tokenizer, text_column_name=text_column_name),
+            lambda x: tokenize_function(x, tokenizer=self.tokenizer, text_column_name=text_column_name),
             batched=True,
             num_proc=self.num_proc,
             remove_columns=column_names
         )
-        expanded_inputs_length, targets_length = mt5_utils.compute_input_and_target_lengths(
+        expanded_inputs_length, targets_length = compute_input_and_target_lengths(
             inputs_length=self.max_seq_length,
             noise_density=self.mlm_probability,
             mean_noise_span_length=self.mean_noise_span_length,
         )
 
-        data_collator = mt5_utils.FlaxDataCollatorForT5MLM(
+        data_collator = FlaxDataCollatorForT5MLM(
             tokenizer=self.tokenizer,
             noise_density=self.mlm_probability,
             mean_noise_span_length=self.mean_noise_span_length,
@@ -60,7 +64,7 @@ class mt5PerplexityExperiments:
         )
 
         tokenized_datasets = tokenized_datasets.map(
-            lambda x: mt5_utils.group_texts(x, expanded_inputs_length=expanded_inputs_length),
+            lambda x: group_texts(x, expanded_inputs_length=expanded_inputs_length),
             batched=True,
             num_proc=self.num_proc,
         )
@@ -82,6 +86,7 @@ class mt5PerplexityExperiments:
         mlm_probability: float = 0.15,
         mean_noise_span_length: int = 3,
         num_proc: Optional[int] = None,
+        lr_languages_to_test = None
     ):
         self.max_seq_length = max_seq_length
         self.per_device_batch_size = per_device_batch_size
@@ -104,14 +109,16 @@ class mt5PerplexityExperiments:
             "num_proc":num_proc
         }
         random_seed = uuid.uuid4()
-        save_folder = f'mt5_experiments/training_on_{Path(train_valid_dir).name}/{random_seed}'
+        self.save_folder = f'mt5_experiments/training_on_{Path(train_valid_dir).name}/{random_seed}'
 
-        if not os.path.exists(save_folder):
-            os.makedirs(save_folder)
+        if not os.path.exists(self.save_folder):
+            os.makedirs(self.save_folder)
         
-        params_filename = Path(save_folder, "params.json")
-        log_filename = Path(save_folder, "log_results.txt")
-        with open(params_filename, "w") as outfile:
+        params_filename = Path(self.save_folder, "params.json")
+        log_filename = Path(self.save_folder, "log_results.txt")
+        log_errors = Path(self.save_folder, "log_errors.txt")
+        new_log_path = Path(self.save_folder, "new_log.json")
+        with open(params_filename, "w+") as outfile:
             json.dump(log_params, outfile, indent=4)
 
         train_val_paths = [str(Path(train_valid_dir, i)) for i in os.listdir(train_valid_dir)]
@@ -121,17 +128,23 @@ class mt5PerplexityExperiments:
         data_indices = np.random.choice(len(dataset), dataset_limit)
         cutted_dataset = dataset.select(data_indices)
         datasets = cutted_dataset.train_test_split(test_size=1-train_size)
-        column_name = 'train'
 
-        train_tokenized_datasets, train_data_collator = self.get_tokenized_dataset(datasets, column_name)
-        num_train_samples = len(train_tokenized_datasets[column_name])
-        train_batch_idx = mt5_utils.generate_batch_splits(
+        train_tokenized_datasets, train_data_collator = self.get_tokenized_dataset(datasets, 'train')
+        num_train_samples = len(train_tokenized_datasets['train'])
+        train_batch_idx = generate_batch_splits(
             np.arange(num_train_samples),
             self.per_device_batch_size
             )
         
         num_train_steps = len(train_tokenized_datasets["train"]) // self.per_device_batch_size * n_epochs
         
+        val_tokenized_datasets, val_data_collator = self.get_tokenized_dataset(datasets, 'test')
+        num_val_samples = len(val_tokenized_datasets['test'])
+        val_batch_idx = generate_batch_splits(
+            np.arange(num_val_samples),
+            self.per_device_batch_size
+            )
+
         optimizer = AdamW(
             self.model.parameters(),
             lr=learning_rate,
@@ -144,70 +157,100 @@ class mt5PerplexityExperiments:
                 num_warmup_steps=num_warmup_steps,
                 num_training_steps=num_train_steps
                 )
+        
+        self.log_dict = {"train": [], "val": [], "test": {}}
         for epoch in trange(n_epochs):
             # ======================== Training ================================
             train_losses_epoch = []
 
             step = int(len(train_batch_idx) * 0.05)
-            for i, batch_idx in tqdm(enumerate(train_batch_idx), desc='Training...', leave=True):
+            for i, batch_idx in tqdm(enumerate(train_batch_idx), desc='Training...', leave=True, total=len(train_batch_idx)):
+                with open(str(new_log_path), "w") as outfile:
+                    json.dump(self.log_dict, outfile)
+                
+                torch.cuda.empty_cache()
+                gc.collect()
                 self.model.train()
                 f = open(log_filename, 'a+')
-       
+                f_error = open(log_errors, 'a+')
+               
                 samples = [train_tokenized_datasets["train"][int(idx)] for idx in batch_idx]
                 model_inputs = train_data_collator(samples)
                 model_inputs = shard(model_inputs.data)
 
                 input_ids = torch.LongTensor(model_inputs['input_ids']).to(self.device)
-                # decoder_input_ids = torch.LongTensor(model_inputs['decoder_input_ids']).to(self.device)
                 labels = torch.LongTensor(model_inputs['labels']).to(self.device)
-
+                
+                input_ids_size = input_ids.size()
+                labels_size = labels.size()
+                input_ids = input_ids.reshape([input_ids_size[0], input_ids_size[1] * input_ids_size[2]])
+                labels = labels.reshape([labels_size[0], labels_size[1] * labels_size[2]])
+                
+                optimizer.zero_grad()
                 loss = self.model(
-                    input_ids=torch.squeeze(input_ids, 0),
-                    labels=torch.squeeze(labels, 0)
+                    input_ids=input_ids,
+                    labels=labels
                 )
                 train_losses_epoch.append(loss.loss.item())
                 loss.loss.backward()
                 optimizer.step()
                 scheduler.step()
-                optimizer.zero_grad()
 
                 # ======================== Evaluating ==============================
                 if i % step == 0 and i > 0:
-                    train_msg = f'TRAIN ITERATION: {i}\t FOR {train_valid_dir} \t Perplexity = {np.exp(np.mean(train_losses_epoch))}\n'
+                    perp_train = np.exp(np.mean(train_losses_epoch))
+                    train_msg = f'\nTRAIN ITERATION: {i}\t FOR {train_valid_dir} \t Perplexity = {perp_train}\n'
                     print(train_msg)
                     f.write(train_msg)
+                    
+                    self.log_dict["train"].append(perp_train)
 
                     self.model.eval()
-
                     with torch.no_grad():
-                        column_name = 'test'
-                        val_tokenized_datasets, val_data_collator = self.get_tokenized_dataset(datasets, column_name)
-                        num_val_samples = len(val_tokenized_datasets[column_name])
-                        val_batch_idx = mt5_utils.generate_batch_splits(
-                            np.arange(num_val_samples),
-                            self.per_device_batch_size
-                            )
+                        torch.cuda.empty_cache()
+                        gc.collect()
                         val_losses_epoch = []
                         for batch_idx in tqdm(val_batch_idx, desc='Validation...', leave=True):
-                            samples = [val_tokenized_datasets[column_name][int(idx)] for idx in batch_idx]
+                            samples = [val_tokenized_datasets["test"][int(idx)] for idx in batch_idx]
                             model_inputs = val_data_collator(samples)
                             model_inputs = shard(model_inputs.data)
 
                             input_ids = torch.LongTensor(model_inputs['input_ids']).to(self.device)
-                            # decoder_input_ids = torch.LongTensor(model_inputs['decoder_input_ids']).to(self.device)
                             labels = torch.LongTensor(model_inputs['labels']).to(self.device)
 
+                            input_ids_size = input_ids.size()
+                            labels_size = labels.size()
+                            input_ids = input_ids.reshape([input_ids_size[0], input_ids_size[1] * input_ids_size[2]])
+                            labels = labels.reshape([labels_size[0], labels_size[1] * labels_size[2]])
                             loss = self.model(
-                                input_ids=torch.squeeze(input_ids, 0),
-                                labels=torch.squeeze(labels, 0)
+                                input_ids=input_ids,
+                                labels=labels
                             )
                             val_losses_epoch.append(loss.loss.item())
-
-                        val_msg = f'VALIDATION ITERATION: {i}\t FOR {train_valid_dir} \t Perplexity = {np.exp(np.mean(val_losses_epoch))}\n'
+                        
+                        perp_val = np.exp(np.mean(val_losses_epoch))
+                        val_msg = f'\nVALIDATION ITERATION: {i}\t FOR {train_valid_dir} \t Perplexity = {perp_val}\n'
                         print(val_msg)
                         f.write(val_msg)
+                        
+                        self.log_dict["val"].append(perp_val)
                         f.close()
-                        torch.save(self.model.state_dict(), Path(save_folder, f'epoch_{epoch}_iteration_{i}.pt'))
+                        #torch.save(self.model.state_dict(), Path(save_folder, f'epoch_{epoch}_iteration_{i}.pt'))
+                        
+                        torch.cuda.empty_cache()
+                        gc.collect()
+                        for lr_lang in tqdm(lr_languages_to_test):
+                            lang_folder_path = str(Path(Path(train_valid_dir).parent, lr_lang))
+                            if lang_folder_path not in self.log_dict["test"]:
+                                self.log_dict["test"][lang_folder_path] = []
+                            self.log_dict["test"][lang_folder_path].append(self.testing(lang_folder_path))
+                            try:
+                                if lang_folder_path not in self.log_dict["test"]:
+                                    self.log_dict["test"][lang_folder_path] = []
+                                self.log_dict["test"][lang_folder_path].append(self.testing(lang_folder_path))
+                            except:
+                                f_error.write(f"Something went wrong during processing: {lang_folder_path}\n")
+
 
     def testing(
         self,
@@ -231,85 +274,36 @@ class mt5PerplexityExperiments:
         test_paths = [str(Path(test_dir, i)) for i in os.listdir(test_dir)]
         datasets = load_dataset('text', data_files=test_paths)
 
+        test_tokenized_datasets, test_data_collator = self.get_tokenized_dataset(datasets, 'train')
+        num_test_samples = len(test_tokenized_datasets['train'])
+        test_batch_idx = generate_batch_splits(
+            np.arange(num_test_samples),
+            self.per_device_batch_size
+            )
         self.model.eval()
-
         with torch.no_grad():
-            column_name = 'train'
-            test_tokenized_datasets, test_data_collator = self.get_tokenized_dataset(datasets, column_name)
-            num_test_samples = len(test_tokenized_datasets[column_name])
-            test_batch_idx = mt5_utils.generate_batch_splits(
-                np.arange(num_test_samples),
-                self.per_device_batch_size
-                )
+            torch.cuda.empty_cache()
+            gc.collect()
             test_losses = []
             for batch_idx in tqdm(test_batch_idx, desc='Testing...', leave=True):
-                samples = [test_tokenized_datasets[column_name][int(idx)] for idx in batch_idx]
+                samples = [test_tokenized_datasets["train"][int(idx)] for idx in batch_idx]
                 model_inputs = test_data_collator(samples)
                 model_inputs = shard(model_inputs.data)
 
                 input_ids = torch.LongTensor(model_inputs['input_ids']).to(self.device)
-                # decoder_input_ids = torch.LongTensor(model_inputs['decoder_input_ids']).to(self.device)
                 labels = torch.LongTensor(model_inputs['labels']).to(self.device)
 
+                input_ids_size = input_ids.size()
+                labels_size = labels.size()
+                input_ids = input_ids.reshape([input_ids_size[0], input_ids_size[1] * input_ids_size[2]])
+                labels = labels.reshape([labels_size[0], labels_size[1] * labels_size[2]])
                 loss = self.model(
-                    input_ids=torch.squeeze(input_ids, 0),
-                    labels=torch.squeeze(labels, 0)
+                    input_ids=input_ids,
+                    labels=labels
                 )
                 test_losses.append(loss.loss.item())
             
-            test_msg = (f'TEST: For {test_dir} \t Perplexity = {np.exp(np.mean(test_losses))}\n')
+            test_msg = (f'\nTEST: For {test_dir} \t Perplexity = {np.exp(np.mean(test_losses))}\n')
             print(test_msg)
-            return np.exp(np.mean(test_losses))
-
-
-def main(
-    train_valid_dir: Optional[os.PathLike] = None,
-    max_dataset_len: int = 500000,
-    train_size: float = 0.9,
-    n_epochs: int = 5,
-    learning_rate: float = 0.005,
-    num_warmup_steps: int = 2000,
-    weight_decay: float = 0.001,
-    betas: Tuple[float, float] = [0.9, 0.999],
-    test_dir: Optional[os.PathLike] = None,
-    model_id: Enum = 'google/mt5-base',
-    device: Enum = 'cuda:0',
-    max_seq_length: int = 256,
-    per_device_batch_size: int = 64,
-    mlm_probability: float = 0.15,
-    mean_noise_span_length: int = 3,
-    num_proc: Optional[int] = None
-):
-    initialize_experiments = mt5PerplexityExperiments(
-        model_id,
-        device,
-    )
-    if train_valid_dir is not None:
-        initialize_experiments.training(
-            train_valid_dir,
-            max_dataset_len,
-            train_size,
-            n_epochs,
-            learning_rate,
-            num_warmup_steps,
-            weight_decay,
-            betas,
-            max_seq_length,
-            per_device_batch_size,
-            mlm_probability,
-            mean_noise_span_length,
-            num_proc
-        )
-
-    if test_dir is not None:
-        initialize_experiments.testing(
-            test_dir,
-            max_seq_length,
-            per_device_batch_size,
-            mlm_probability,
-            mean_noise_span_length,
-            num_proc
-        )
-
-if __name__ == "__main__":
-    Fire(main)
+            perp_test = np.exp(np.mean(test_losses))
+            return perp_test

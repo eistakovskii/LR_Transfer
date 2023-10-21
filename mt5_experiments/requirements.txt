@@ -1,9 +1,4 @@
-transformers==4.12
-numpy
-typing
-flax==0.3.6
-jax
-torch
-datasets
-tqdm
-fire
+transformers==4.24.0
+datasets==2.6.1
+flax==0.6.1
+fire==0.4.0
