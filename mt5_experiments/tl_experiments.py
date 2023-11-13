@@ -16,6 +16,7 @@ from flax.training.common_utils import shard
 from enum import Enum
 from typing import Optional, Tuple, List
 import uuid
+import functools
 
 import tl_utils
 
@@ -106,7 +107,7 @@ class mt5PerplexityExperiments:
             "num_proc": num_proc,
         }
         random_seed = uuid.uuid4()
-        self.save_folder = f"launched_experiments/training_on_{Path(train_valid_dir).name}/{random_seed}"
+        self.save_folder = f"../data/launched_experiments/training_on_{Path(train_valid_dir).name}/{random_seed}"
         self.max_seq_length = max_seq_length
         self.per_device_batch_size = per_device_batch_size
         self.mlm_probability = mlm_probability
@@ -292,6 +293,13 @@ class mt5PerplexityExperiments:
                                     f"Something went wrong during processing: {lang_folder_path}\n"
                                 )
 
+    @functools.lru_cache()
+    def load_experiment_data(self, test_dir):
+        test_paths = [str(Path(test_dir, i)) for i in os.listdir(test_dir)]
+        datasets = load_dataset("text", data_files=test_paths)
+
+        return self.get_tokenized_dataset(datasets, "train")
+
     def testing(
         self,
         test_dir: os.PathLike,
@@ -313,12 +321,10 @@ class mt5PerplexityExperiments:
                 torch.load(checkpoint_path, map_location=self.device)
             )
 
-        test_paths = [str(Path(test_dir, i)) for i in os.listdir(test_dir)]
-        datasets = load_dataset("text", data_files=test_paths)
-
-        test_tokenized_datasets, test_data_collator = self.get_tokenized_dataset(
-            datasets, "train"
+        test_tokenized_datasets, test_data_collator = self.load_experiment_data(
+            test_dir
         )
+
         num_test_samples = len(test_tokenized_datasets["train"])
         test_batch_idx = tl_utils.generate_batch_splits(
             np.arange(num_test_samples), self.per_device_batch_size
