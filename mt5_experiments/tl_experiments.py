@@ -106,9 +106,7 @@ class mt5PerplexityExperiments:
             "num_proc": num_proc,
         }
         random_seed = uuid.uuid4()
-        self.save_folder = (
-            f"launched_experiments/training_on_{Path(train_valid_dir).name}/{random_seed}"
-        )
+        self.save_folder = f"launched_experiments/training_on_{Path(train_valid_dir).name}/{random_seed}"
         self.max_seq_length = max_seq_length
         self.per_device_batch_size = per_device_batch_size
         self.mlm_probability = mlm_probability
@@ -354,3 +352,4 @@ class mt5PerplexityExperiments:
             perp_test = np.exp(np.mean(test_losses))
             test_msg = f"\nTEST: For {test_dir} \t Perplexity = {perp_test}\n"
             print(test_msg)
+        return perp_test
