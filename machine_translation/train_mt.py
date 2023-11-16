@@ -121,7 +121,7 @@ if __name__ == "__main__":
         "--seed", type=int, default=42, help="learning rate"
     )
     parser.add_argument(
-        "--short_run", type=bool, default=False, help="run training using small dataset"
+        "--short_run", type=int, default=1, help="run training using small dataset"
     )
     parser.add_argument(
         "--model_name",
