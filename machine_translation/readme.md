@@ -7,13 +7,13 @@ The file expects to be given a [valid NLLB-type language pair](https://huggingfa
 
 ## How to run training
 
-**Step $1$: Install dependencies**
+**Step $0$: Install dependencies**
 
 ```
 pip install -r requirements.txt
 ```
 
-**Step $2$: Run Training**
+**Step $1$: Run Training**
 
 ``` shell
 python train_mt.py --lang_pair pol_Latn-ukr_Cyrl \
@@ -23,11 +23,7 @@ python train_mt.py --lang_pair pol_Latn-ukr_Cyrl \
 ```
 ## How to run evaluation
 
-```
-pip install -r requirements.txt
-```
-
-**Step $2$: Run Training**
+**Step $2$: Run Evaluation**
 
 ``` shell
 python evaluate_mt.py --lang_pair pol_Latn-ukr_Cyrl \ # specify your language pair, required
