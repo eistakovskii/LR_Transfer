@@ -54,7 +54,7 @@ def export_results(checkpoint_name, model_name, lang_pair, eval_chrf, eval_bleu,
             'language_pair': lang_pair,
             'metrics':{'chrf': eval_chrf, 'bleu': eval_bleu}}
 
-    with open(f'experiment_results_{nickname}.json', 'w', encoding='utf-8') as f:
+    with open(f'experiment_results/experiment_results_{nickname}.json', 'w', encoding='utf-8') as f:
         json.dump(out_json, f, ensure_ascii=False, indent=4)
     
     pass
@@ -120,7 +120,7 @@ if __name__ == "__main__":
     input_lang, target_lang = lang_pair.split('-')
 
     if short_run:
-        dataset = dataset['train'].train_test_split(test_size=0.001, shuffle=True, seed=random_seed)
+        dataset = dataset['train'].train_test_split(test_size=0.2, shuffle=True, seed=random_seed)
         dataset = dataset['test']
         dataset = dataset.train_test_split(test_size=0.1, shuffle=True, seed=random_seed)
     else:
@@ -179,7 +179,7 @@ if __name__ == "__main__":
 
         print(f'Test Loss: {test_loss:.4f}, Test chrF: {test_chrf:.4f}, Test Bleu: {test_bleu:.4f}')
 
-        model_name_out = f"mt5_model_{lang_pair}.pth"
+        model_name_out = f"finetuned_checkpoints/mt5_model_{lang_pair}.pth"
 
         # Save the model
         torch.save(model.state_dict(), model_name_out) # Model will be saved in the current working directory
